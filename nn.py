@@ -1,5 +1,5 @@
 import numpy as np
-from helpers import stable_softmax
+from helpers import stable_softmax, iterate_minibatches
 
 class NeuralNetwork:
     """ Neural network class"""
@@ -98,20 +98,20 @@ class NeuralNetwork:
         for i, dW in enumerate(dWs):
             self.W[i] -= self.lr * dW/n 
     
-        def train(X, y, batch_size=100, epochs=1):
-            """Train neural network.
-            
-            Args:
-                X (np array): Observations of size (n, p) with n samples and p features.
-                y (np array): Targets with n samples.
-                batch_size (int): Size of minibatches.
-                epochs (int): Number of times to go through observations.
-            
-            Returns:
-                Nothing. Updates model weights.
-            
-            """
-            for i in range(epochs):
-                for batch in iterate_minibatches(X, y, batch_size):
-                    x_batch, y_batch = batch
-                    self.backward(x_batch, y_batch)
+    def train(self, X, y, batch_size=100, epochs=1):
+        """Train neural network.
+        
+        Args:
+            X (np array): Observations of size (n, p) with n samples and p features.
+            y (np array): Targets with n samples.
+            batch_size (int): Size of minibatches.
+            epochs (int): Number of times to go through observations.
+        
+        Returns:
+            Nothing. Updates model weights.
+        
+        """
+        for i in range(epochs):
+            for batch in iterate_minibatches(X, y, batch_size):
+                x_batch, y_batch = batch
+                self.backward(x_batch, y_batch)
