@@ -59,3 +59,20 @@ def iterate_minibatches(inputs, targets, batchsize):
     for start_idx in range(0, inputs.shape[0] - batchsize + 1, batchsize):
         excerpt = indices[start_idx:start_idx + batchsize]
         yield inputs[excerpt], targets[excerpt]
+
+        
+def split_data(X, y, percentage=80):
+    """Split data into train and validation set."""
+    N = X.shape[0]
+
+    arr_rand = np.random.rand(X.shape[0])
+    train_idx = arr_rand < np.percentile(arr_rand, percentage)
+
+    X_train, y_train = X[train_idx], y[train_idx]
+    
+    mask = np.ones(N, dtype=np.bool)
+    mask[train_idx] = False
+    
+    X_val, y_val = X[mask], y[mask]
+
+    return X_train, y_train, X_val, y_val
