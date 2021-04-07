@@ -1,5 +1,5 @@
 import numpy as np
-
+from helpers import stable_softmax
 
 class NeuralNetwork:
     """ Neural network class"""
@@ -28,7 +28,7 @@ class NeuralNetwork:
         """
         W = []
         for i in range(self.num_layers-1):
-            W.append(np.random.randn(layers[i]+1, layers[i+1]) * np.sqrt(2/3))
+            W.append(np.random.normal(loc=0, scale=np.sqrt(2/layers[i]), size=(layers[i]+1, layers[i+1])))
         return W
     
     def forward(self, X):
