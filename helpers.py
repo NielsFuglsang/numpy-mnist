@@ -20,6 +20,14 @@ def read_mnist():
     return ims, labels, a, t
 
 
+def format_data(ims, labels, num_classes=10):
+
+    X = ims.reshape(ims.shape[0], -1).astype(np.float32) / 255
+    y = np.eye(num_classes)[labels]
+    
+    return X, y
+
+
 def ReLU(x, derivative=False):
     if derivative:
         return (x > 0).astype(int)
