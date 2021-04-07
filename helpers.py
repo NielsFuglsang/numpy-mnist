@@ -76,3 +76,8 @@ def split_data(X, y, percentage=80):
     X_val, y_val = X[mask], y[mask]
 
     return X_train, y_train, X_val, y_val
+
+
+def accuracy(pred, y):
+    """Get prediction accuracy from network output and one-hot-encoded labels."""
+    return np.mean(np.argmax(pred,axis=1)==np.argmax(y, axis=1))

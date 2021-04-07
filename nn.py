@@ -15,6 +15,9 @@ class NeuralNetwork:
         self.num_layers = len(layers)
         self.W = self.init_weights(layers)
         self.lr = lr
+
+        # Momentum velocity initalization.
+        self.velocity = [np.zeros(self.W[i].shape) for i in range(self.num_layers - 1)]
     
     def init_weights(self, layers):
         """Initialize normal distributed weights.
@@ -67,7 +70,7 @@ class NeuralNetwork:
         
         return y, a_s, z_s
     
-    def backward(self, X, y):
+    def backward(self, X, y, momentum=0.9):
         """Backpropagation
 
         Args:
@@ -93,10 +96,11 @@ class NeuralNetwork:
         
             Q = np.c_[a_s[-l-1], np.ones(a_s[-l-1].shape[0])].T @ delta.T
             dWs[-l] = Q
-            
+        
         # Update W
         for i, dW in enumerate(dWs):
-            self.W[i] -= self.lr * dW/n 
+            self.velocity[i] = momentum * self.velocity[i] + self.lr * dW/n 
+            self.W[i] -= self.velocity[i]
     
     def train(self, X, y, batch_size=100, epochs=1):
         """Train neural network.
