@@ -2,11 +2,11 @@ import numpy as np
 
 def read_mnist():
     """Read file and labels."""
-    f = open('mnist/t10k-images-idx3-ubyte', 'r')
+    f = open('mnist/train-images-idx3-ubyte', 'r')
     a = np.fromfile(f, dtype='>i4', count=4) # data type is signed integer big-endian
     images = np.fromfile(f, dtype=np.uint8)
 
-    f = open('mnist/t10k-labels-idx1-ubyte', 'r')
+    f = open('mnist/train-labels-idx1-ubyte', 'r')
     t = np.fromfile(f, count = 2, dtype='>i4') # data type is signed integer big-endian
     labels = np.fromfile(f, dtype=np.uint8)
 
