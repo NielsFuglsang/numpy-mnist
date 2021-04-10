@@ -85,9 +85,11 @@ def rotate(im, deg=None):
     
     rad = deg_to_rad(deg)
 
-    # Define rotation matrix.
+    # Define (deformed) rotation matrix.
+    deform = np.random.normal(size=(2,2))*0.1 + 1
     R = np.array([[np.cos(rad), -np.sin(rad)],
                   [np.sin(rad), np.cos(rad)]])
+    R *= deform
     
     im_rot = np.zeros(im.shape)
     center = np.array(im.shape) / 2
