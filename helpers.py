@@ -1,4 +1,5 @@
 import numpy as np
+import pickle
 
 
 def read_mnist():
@@ -81,3 +82,13 @@ def split_data(X, y, percentage=80):
 def accuracy(pred, y):
     """Get prediction accuracy from network output and one-hot-encoded labels."""
     return np.mean(np.argmax(pred,axis=1)==np.argmax(y, axis=1))
+
+
+def dump_nn(nn, nn_path='nn.pkl'):
+    with open(nn_path, 'wb') as file:
+        pickle.dump(nn, file, pickle.HIGHEST_PROTOCOL)
+    
+def load_nn(nn_path):
+    with open(nn_path, 'rb') as file:
+        nn = pickle.load(file)
+    return nn
