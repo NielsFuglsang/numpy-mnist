@@ -2,15 +2,9 @@ import numpy as np
 import pickle
 
 
-def read_mnist(data='train'):
+def read_mnist(im_path='mnist/train-images-idx3-ubyte', 
+               lab_path='mnist/train-labels-idx1-ubyte'):
     """Read file and labels."""
-
-    if data == 'test':
-        im_path = 'mnist/t10k-images-idx3-ubyte'
-        lab_path = 'mnist/t10k-labels-idx1-ubyte'
-    else:
-        im_path = 'mnist/train-images-idx3-ubyte'
-        lab_path = 'mnist/train-labels-idx1-ubyte' 
 
     f = open(im_path, 'r')
     # data type is signed integer big-endian
@@ -92,7 +86,7 @@ def accuracy(pred, y):
     return np.mean(np.argmax(pred,axis=1)==np.argmax(y, axis=1))
 
 
-def dump_nn(nn, nn_path='nn.pkl'):
+def dump_nn(nn, nn_path='models/nn.pkl'):
     with open(nn_path, 'wb') as file:
         pickle.dump(nn, file, pickle.HIGHEST_PROTOCOL)
     
