@@ -1,8 +1,8 @@
 # Functions for augmentation.
-# TODO: Add elastic distortion.
-# TODO: Reduce runtime.
 
 import numpy as np
+from tqdm import tqdm
+import pickle
 
 
 def add_noise(im, noise_level=None):
@@ -30,20 +30,22 @@ def expand_training_set(ims, labels, expansion_pct=0.1):
     """
     N = ims.shape[0]
     N_augmented = int(N * expansion_pct)
-    N_new = N + N_augmented
+
+    ims_aug = np.zeros((N_augmented,) + ims.shape[1:])
+    labels_aug = np.zeros((N_augmented))
     
     random_samples = np.random.choice(range(N), size=N_augmented, replace=False)
-    for i in range(N_augmented):
-        im = ims[random_samples[i]]
-        label = labels[random_samples[i]]
+    
+    for i, sample_id in tqdm(enumerate(random_samples)):
+        im = ims[sample_id]
+        label = labels[sample_id]
         im = rotate(im)
         im = add_noise(im)
         im = mirror(im, label).reshape(1,28,28)
-        ims = np.append(ims, im, axis=0)
-        labels = np.append(labels, label)
+        ims_aug[i] = im
+        labels_aug[i] = label
 
-    return ims, labels
-
+    return ims_aug, labels_aug
 
 def mirror(im, label, axis=None):
     """Flip image along first or second axis, or a combination of both if axis=2 (i.e. rotate 180 degrees)."""
@@ -103,3 +105,19 @@ def rotate(im, deg=None):
             im_rot[i, j] = im[p_old[0], p_old[1]]
 
     return im_rot
+
+def load_augmented():
+    with open('mnist/augmented/ims_aug1.pkl'.format(), 'rb') as file:
+        ims_aug = pickle.load(file)
+    with open('mnist/augmented/labels_aug1.pkl'.format(), 'rb') as file:
+        labels_aug = pickle.load(file)
+    
+    for i in range(2,7):
+        with open('mnist/augmented/ims_aug{}.pkl'.format(i), 'rb') as file:
+            ims_aug = np.append(ims_aug, pickle.load(file), axis=0)
+        with open('mnist/augmented/labels_aug{}.pkl'.format(i), 'rb') as file:
+            labels_aug = np.append(labels_aug, pickle.load(file), axis=0)
+            
+    labels_aug = labels_aug.astype(np.int8)
+    
+    return ims_aug, labels_aug
