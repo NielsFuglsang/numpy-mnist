@@ -66,6 +66,7 @@ def iterate_minibatches(inputs, targets, batchsize):
         
 def split_data(X, y, percentage=80):
     """Split data into train and validation set."""
+    np.random.seed(42)
     N = X.shape[0]
 
     arr_rand = np.random.rand(X.shape[0])
