@@ -4,7 +4,7 @@ from helpers import stable_softmax, iterate_minibatches
 class NeuralNetwork:
     """ Neural network class"""
     
-    def __init__(self, layers = [2, 3, 2], lr=0.001):
+    def __init__(self, layers = [2, 3, 2], lr=0.001, momentum=0):
         """Initialize network.
         
         Args:
@@ -13,6 +13,7 @@ class NeuralNetwork:
 
         """
         self.layers = layers
+        self.momentum = momentum
         self.num_layers = len(layers)
         self.W = self.init_weights(layers)
         self.lr = lr
@@ -71,7 +72,7 @@ class NeuralNetwork:
         
         return y, a_s, z_s
     
-    def backward(self, X, y, momentum=0.9):
+    def backward(self, X, y):
         """Backpropagation
 
         Args:
@@ -100,7 +101,7 @@ class NeuralNetwork:
         
         # Update W
         for i, dW in enumerate(dWs):
-            self.velocity[i] = momentum * self.velocity[i] + self.lr * dW/n 
+            self.velocity[i] = self.momentum * self.velocity[i] + self.lr * dW/n 
             self.W[i] -= self.velocity[i]
     
     def train(self, X, y, batch_size=100, epochs=1):
