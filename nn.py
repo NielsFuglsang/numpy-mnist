@@ -1,5 +1,32 @@
 import numpy as np
-from helpers import stable_softmax, iterate_minibatches
+
+
+def ReLU(x, derivative=False):
+    """Compute the ReLU activation funciton and derivative."""
+    if derivative:
+        return (x > 0).astype(int).T
+    else:
+        return np.maximum(x, 0)
+
+
+def stable_softmax(X):
+    """Numerically more stable softmax."""
+    z = X - np.max(X, axis=-1, keepdims=True)
+    numerator = np.exp(z)
+    denominator = np.sum(numerator, axis=-1, keepdims=True)
+    softmax = numerator / denominator
+    return softmax
+
+
+def cross_entropy_loss(t, y, derivative=False):
+    """Compute cross entropy loss and derivative."""
+    if np.shape(t) != np.shape(y):
+        print("t and y have different shapes")
+    if derivative:  # Return the derivative of the function
+        return (y-t).T
+    else:
+        return t * np.log(y)
+
 
 class NeuralNetwork:
     """ Neural network class"""
@@ -59,7 +86,7 @@ class NeuralNetwork:
         for i in range(self.num_layers - 2):
             
             z = np.c_[a_s[i], np.ones(n_pts)] @ self.W[i]
-            a = np.maximum(z, 0)
+            a = ReLU(z)
             a_s.append(a)
             z_s.append(z)
         
@@ -88,12 +115,12 @@ class NeuralNetwork:
         
         yhat, a_s, z_s = self.forward(X)
         # Last layer
-        delta = (yhat-y).T
+        delta = cross_entropy_loss(y, yhat, derivative=True)
         Q = np.c_[a_s[-2], np.ones(a_s[-2].shape[0])].T @ delta.T
         dWs[-1] = Q
         
         for l in range(2, self.num_layers):
-            d_z = (z_s[-l]>0).astype(int).T
+            d_z = ReLU(z_s[-l], derivative=True)
             delta = d_z * (self.W[-l+1][:-1,:] @ delta)
         
             Q = np.c_[a_s[-l-1], np.ones(a_s[-l-1].shape[0])].T @ delta.T
@@ -104,20 +131,3 @@ class NeuralNetwork:
             self.velocity[i] = self.momentum * self.velocity[i] + self.lr * dW/n 
             self.W[i] -= self.velocity[i]
     
-    def train(self, X, y, batch_size=100, epochs=1):
-        """Train neural network.
-        
-        Args:
-            X (np array): Observations of size (n, p) with n samples and p features.
-            y (np array): Targets with n samples.
-            batch_size (int): Size of minibatches.
-            epochs (int): Number of times to go through observations.
-        
-        Returns:
-            Nothing. Updates model weights.
-        
-        """
-        for i in range(epochs):
-            for batch in iterate_minibatches(X, y, batch_size):
-                x_batch, y_batch = batch
-                self.backward(x_batch, y_batch)

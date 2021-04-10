@@ -31,30 +31,6 @@ def format_data(ims, labels, num_classes=10):
     return X, y
 
 
-def ReLU(x, derivative=False):
-    if derivative:
-        return (x > 0).astype(int)
-    else:
-        return np.maximum(x, 0)
-
-
-def stable_softmax(X):
-    z = X - np.max(X, axis=-1, keepdims=True)
-    numerator = np.exp(z)
-    denominator = np.sum(numerator, axis=-1, keepdims=True)
-    softmax = numerator / denominator
-    return softmax
-
-
-def cross_entropy_loss(t, y, derivative=False):
-    if np.shape(t) != np.shape(y):
-        print("t and y have different shapes")
-    if derivative:  # Return the derivative of the function
-        return y-t
-    else:
-        return t * np.log(y)
-
-
 def iterate_minibatches(inputs, targets, batchsize):
     """Generator for getting minibatches."""
     indices = np.arange(inputs.shape[0])
@@ -90,6 +66,7 @@ def accuracy(pred, y):
 def dump_nn(nn, nn_path='models/nn.pkl'):
     with open(nn_path, 'wb') as file:
         pickle.dump(nn, file, pickle.HIGHEST_PROTOCOL)
+    
     
 def load_nn(nn_path):
     with open(nn_path, 'rb') as file:
