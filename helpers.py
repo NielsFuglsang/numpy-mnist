@@ -2,15 +2,23 @@ import numpy as np
 import pickle
 
 
-def read_mnist():
+def read_mnist(data='train'):
     """Read file and labels."""
-    f = open('mnist/t10k-images-idx3-ubyte', 'r')
+
+    if data == 'test':
+        im_path = 'mnist/t10k-images-idx3-ubyte'
+        lab_path = 'mnist/t10k-labels-idx1-ubyte'
+    else:
+        im_path = 'mnist/train-images-idx3-ubyte'
+        lab_path = 'mnist/train-labels-idx1-ubyte' 
+
+    f = open(im_path, 'r')
     # data type is signed integer big-endian
     a = np.fromfile(f, dtype='>i4', count=4)
     images = np.fromfile(f, dtype=np.uint8)
     f.close()
 
-    f = open('mnist/t10k-labels-idx1-ubyte', 'r')
+    f = open(lab_path, 'r')
     # data type is signed integer big-endian
     t = np.fromfile(f, count=2, dtype='>i4')
     labels = np.fromfile(f, dtype=np.uint8)

@@ -12,6 +12,7 @@ class NeuralNetwork:
             lr: Learning Rate
 
         """
+        self.layers = layers
         self.num_layers = len(layers)
         self.W = self.init_weights(layers)
         self.lr = lr
