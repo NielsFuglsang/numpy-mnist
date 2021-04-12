@@ -33,12 +33,13 @@ def train(nn, X_train, y_train, X_val, y_val, epochs, batch_size):
 
 # Read and format data.
 ims, labels, a, t = read_mnist()
-ims_aug, labels_aug = load_augmented()
+# ims_aug, labels_aug = load_augmented()
 X, y = format_data(ims, labels)
-X_aug, y_aug = format_data(ims_aug, labels_aug)
+X = deskew_all(X)
+# X_aug, y_aug = format_data(ims_aug, labels_aug)
 X_train, y_train, X_val, y_val = split_data(X, y, percentage=80)
-X_train = np.append(X_train, X_aug, axis=0)
-y_train = np.append(y_train, y_aug, axis=0)
+# X_train = np.append(X_train, X_aug, axis=0)
+# y_train = np.append(y_train, y_aug, axis=0)
 
 # Create nn.
 nn = NeuralNetwork(layers=[784, 800, 10], momentum=0.9)
