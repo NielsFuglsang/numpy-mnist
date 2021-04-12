@@ -26,7 +26,7 @@ def train(nn, X_train, y_train, X_val, y_val, epochs, batch_size):
         yhat_val, _, _ = nn.forward(X_val)
         acc_val = accuracy(yhat_val, y_val)
         accuracy_val.append(acc_val)
-        print(f"Epoch {i}, Val acc: {acc_val}", flush=True)
+        print(f"Epoch {i}, Train acc: {acc_train}, Val acc: {acc_val}", flush=True)
 
     return accuracy_train, accuracy_val
 
