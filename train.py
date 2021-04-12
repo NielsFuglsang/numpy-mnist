@@ -4,6 +4,8 @@ from nn import NeuralNetwork
 from helpers import read_mnist, format_data, iterate_minibatches, split_data, accuracy, dump_nn
 from augmentation import load_augmented
 
+from deskew import deskew_all
+
 def train(nn, X_train, y_train, X_val, y_val, epochs, batch_size):
     """Training loop."""
      
