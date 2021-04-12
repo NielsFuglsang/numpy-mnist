@@ -27,4 +27,4 @@ def deskew_all(X):
     for i in range(X.shape[0]):
         deskewed[i,:] = deskew(X[i].reshape(28,28)).ravel()
     
-    return np.append(X, deskewed, axis=0)
+    return deskewed
