@@ -23,6 +23,9 @@ def deskew(image):
     return interpolation.affine_transform(image,affine,offset=offset)
 
 def deskew_all(X):
+    if X.ndim<2:
+        return deskew(X.reshape(28,28)).ravel()
+
     deskewed = np.empty_like(X)
     for i in range(X.shape[0]):
         deskewed[i,:] = deskew(X[i].reshape(28,28)).ravel()
