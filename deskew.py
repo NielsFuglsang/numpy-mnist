@@ -1,7 +1,9 @@
+"""Code for deskewing MNIST images. Inspired by https://fsix.github.io/mnist/Deskewing.html."""
 from scipy.ndimage import interpolation
 import numpy as np
 
 def moments(image):
+    """Calculate mean and covariance matrix of image."""
     c0,c1 = np.mgrid[:image.shape[0],:image.shape[1]] # A trick in numPy to create a mesh grid
     totalImage = np.sum(image) #sum of pixels
     m0 = np.sum(c0*image)/totalImage #mu_x
@@ -15,6 +17,7 @@ def moments(image):
 
 
 def deskew(image):
+    """Deskew image based on the image moments."""
     c,v = moments(image)
     alpha = v[0,1]/v[0,0]
     affine = np.array([[1,0],[alpha,1]])
@@ -23,6 +26,10 @@ def deskew(image):
     return interpolation.affine_transform(image,affine,offset=offset)
 
 def deskew_all(X):
+    """
+    Deskew multiple images in np array stored as (n, p) where n
+    is observations and p is pixels. This assumes a 28x28 image.
+    """
     if X.ndim<2:
         return deskew(X.reshape(28,28)).ravel()
 
