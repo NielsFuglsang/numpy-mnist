@@ -35,11 +35,7 @@ nn = NeuralNetwork(layers=[784, 800, 10], momentum=0.9)
 # Train.
 epochs = 300
 batch_size = 200
-# accuracy_train, accuracy_val = train(nn, X_train, y_train, X_val, y_val, epochs, batch_size)
 train_final(nn, X, y, epochs, batch_size)
 
-# yhat_val, _, _ = nn.forward(X_val)
-# acc = accuracy(yhat_val, y_val)
-
-dump_nn(nn, f'models/final_1h_deskew_aug_{acc:.3f}.pkl')
+dump_nn(nn, f'models/final_1h_deskew_aug.pkl')
 
