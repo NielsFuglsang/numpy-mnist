@@ -106,12 +106,13 @@ def rotate(im, deg=None):
 
     return im_rot
 
-def load_augmented():
+def load_augmented(full=False):
     with open('mnist/augmented/ims_aug1.pkl'.format(), 'rb') as file:
         ims_aug = pickle.load(file)
     with open('mnist/augmented/labels_aug1.pkl'.format(), 'rb') as file:
         labels_aug = pickle.load(file)
-    
+    if not full:
+        return ims_aug, labels_aug.astype(np.int8)
     for i in range(2,7):
         with open('mnist/augmented/ims_aug{}.pkl'.format(i), 'rb') as file:
             ims_aug = np.append(ims_aug, pickle.load(file), axis=0)
