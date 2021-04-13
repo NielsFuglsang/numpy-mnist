@@ -1,6 +1,3 @@
-# Multi Layer Perceptron classification on MNIST
-Classification of MNIST with simple FNN using numpy.
-
 # Guide to TAs
 Check out the notebook `demonstration.ipynb`.
 
